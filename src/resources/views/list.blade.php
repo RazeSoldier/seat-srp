@@ -4,16 +4,16 @@
 @section('page_header', trans('srp::srp.list'))
 
 @section('full')
-    <div class="box box-primary box-solid">
-        <div class="box-header">
-            <h3 class="box-title">{{__('srp::srp.srp-request')}}</h3>
+    <div class="card card-primary card-solid">
+        <div class="card-header">
+            <h3 class="card-title">{{__('srp::srp.srp-request')}}</h3>
         </div>
-        <div class="box-body">
-            <div class="nav-tabs-custom">
-                <ul class="nav nav-tabs">
-                    <li class="active"><a href="#tab_1" data-toggle="tab">{{__('srp::srp.pending-request')}}</a></li>
-                    <li><a href="#tab_2" data-toggle="tab">{{__('srp::srp.completed-request')}}</a></li>
-                </ul>
+        <div class="card-body">
+          <div class="nav-tabs-custom">
+            <ul class="nav nav-tabs">
+              <li class="active nav-item"><a class="nav-link" href="#tab_1" data-toggle="tab">{{__('srp::srp.pending-request')}}</a></li>
+              <li class="nav-item"><a class="nav-link" href="#tab_2" data-toggle="tab">{{__('srp::srp.completed-request')}}</a></li>
+            </ul>
 
                 <div class="tab-content">
                     <div class="tab-pane active" id="tab_1">
@@ -173,116 +173,116 @@
 @stop
 
 @push('head')
-    <link rel="stylesheet" type="text/css" href="{{ asset('web/css/denngarr-srp-hook.css') }}"/>
+<link rel="stylesheet" type="text/css" href="{{ asset('web/css/denngarr-srp-hook.css') }}" />
 @endpush
 
 @push('javascript')
-    @include('web::includes.javascript.id-to-name')
-    <script type="application/javascript">
+@include('web::includes.javascript.id-to-name')
+<script type="application/javascript">
 
-        $(function () {
-            $('#srps').DataTable();
-            $('#srps-arch').DataTable();
+  $(function () {
+    $('#srps').DataTable();
+    $('#srps-arch').DataTable();
 
-            $('#srp-ping').on('show.bs.modal', function (e) {
-                var link = '{{ route('srp.ping', 0) }}';
+    $('#srp-ping').on('show.bs.modal', function(e){
+        var link = '{{ route('srp.ping', 0) }}';
 
-                $(this).find('.overlay').show();
-                $(this).find('.modal-body>p').text('');
+        $(this).find('.overlay').show();
+        $(this).find('.modal-body>p').text('');
 
-                $.ajax({
+        $.ajax({
+            url: link.replace('/0', '/' + $(e.relatedTarget).attr('data-kill-id')),
+            dataType: 'json',
+            method: 'GET'
+        }).done(function(response){
+            $('#srp-ping').find('.modal-body>p').text(response.note).removeClass('text-danger');
+        }).fail(function(jqXHR, status){
+            $('#srp-ping').find('.modal-body>p').text(status).addClass('text-danger');
+
+            if (jqXHR.statusCode() !== 500)
+                $('#srp-ping').find('.modal-body>p').text(jqXHR.responseJSON.msg);
+        });
+
+        $(this).find('.overlay').hide();
+    });
+
+    $('#insurances').on('show.bs.modal', function(e){
+        var link = '{{ route('srp.insurances', 0) }}';
+        var table = $('#insurances').find('table');
+
+        if (!$.fn.DataTable.isDataTable(table)) {
+            table.DataTable({
+                "ajax": {
                     url: link.replace('/0', '/' + $(e.relatedTarget).attr('data-kill-id')),
-                    dataType: 'json',
-                    method: 'GET'
-                }).done(function (response) {
-                    $('#srp-ping').find('.modal-body>p').text(response.note).removeClass('text-danger');
-                }).fail(function (jqXHR, status) {
-                    $('#srp-ping').find('.modal-body>p').text(status).addClass('text-danger');
-
-                    if (jqXHR.statusCode() !== 500)
-                        $('#srp-ping').find('.modal-body>p').text(jqXHR.responseJSON.msg);
-                });
-
-                $(this).find('.overlay').hide();
-            });
-
-            $('#insurances').on('show.bs.modal', function (e) {
-                var link = '{{ route('srp.insurances', 0) }}';
-                var table = $('#insurances').find('table');
-
-                if (!$.fn.DataTable.isDataTable(table)) {
-                    table.DataTable({
-                        "ajax": {
-                            url: link.replace('/0', '/' + $(e.relatedTarget).attr('data-kill-id')),
-                            dataSrc: ''
+                    dataSrc: ''
+                },
+                "searching": false,
+                "ordering": true,
+                "info": false,
+                "paging": false,
+                "processing": true,
+                "order": [[0, "asc"]],
+                "columnDefs": [
+                    {
+                        "render": function(data, type, row) {
+                            return row.name;
                         },
-                        "searching": false,
-                        "ordering": true,
-                        "info": false,
-                        "paging": false,
-                        "processing": true,
-                        "order": [[0, "asc"]],
-                        "columnDefs": [
-                            {
-                                "render": function (data, type, row) {
-                                    return row.name;
-                                },
-                                "targets": 0
-                            },
-                            {
-                                "className": "text-right",
-                                "render": function (data, type, row) {
-                                    return parseFloat(row.cost).toLocaleString(undefined, {
-                                        "minimumFractionDigits": 2,
-                                        "maximumFractionDigits": 2
-                                    });
-                                },
-                                "targets": 1
-                            },
-                            {
-                                "className": "text-right",
-                                "render": function (data, type, row) {
-                                    return parseFloat(row.payout).toLocaleString(undefined, {
-                                        "minimumFractionDigits": 2,
-                                        "maximumFractionDigits": 2
-                                    });
-                                },
-                                "targets": 2
-                            },
-                            {
-                                "className": "text-right",
-                                "render": function (data, type, row) {
-                                    return parseFloat(row.refunded).toLocaleString(undefined, {
-                                        "minimumFractionDigits": 2,
-                                        "maximumFractionDigits": 2
-                                    });
-                                },
-                                "targets": 3
-                            },
-                            {
-                                "className": "text-right",
-                                "render": function (data, type, row) {
-                                    return parseFloat(row.remaining).toLocaleString(undefined, {
-                                        "minimumFractionDigits": 2,
-                                        "maximumFractionDigits": 2
-                                    });
-                                },
-                                "targets": 4
-                            }
-                        ]
-                    });
-                }
-            })
-                .on('hidden.bs.modal', function (e) {
-                    var table = $('#insurances').find('table').DataTable();
-                    table.destroy();
-                });
+                        "targets": 0
+                    },
+                    {
+                        "className": "text-right",
+                        "render": function(data, type, row) {
+                            return parseFloat(row.cost).toLocaleString(undefined, {
+                                "minimumFractionDigits": 2,
+                                "maximumFractionDigits": 2
+                            });
+                        },
+                        "targets": 1
+                    },
+                    {
+                        "className": "text-right",
+                        "render": function(data, type, row) {
+                            return parseFloat(row.payout).toLocaleString(undefined, {
+                                "minimumFractionDigits": 2,
+                                "maximumFractionDigits": 2
+                            });
+                        },
+                        "targets": 2
+                    },
+                    {
+                        "className": "text-right",
+                        "render": function(data, type, row) {
+                            return parseFloat(row.refunded).toLocaleString(undefined, {
+                                "minimumFractionDigits": 2,
+                                "maximumFractionDigits": 2
+                            });
+                        },
+                        "targets": 3
+                    },
+                    {
+                        "className": "text-right",
+                        "render": function(data, type, row) {
+                            return parseFloat(row.remaining).toLocaleString(undefined, {
+                                "minimumFractionDigits": 2,
+                                "maximumFractionDigits": 2
+                            });
+                        },
+                        "targets": 4
+                    }
+                ]
+            });
+        }
+    })
+    .on('hidden.bs.modal', function(e){
+        var table = $('#insurances').find('table').DataTable();
+        table.destroy();
+    });
 
             $('#srps tbody').on('click', 'button', function (btn) {
                 $.ajax({
                     headers: function () {
                     },
-                    url: "{{ route('srpadmin.list') }}/" + btn.target.name,
+                    url: "{{ route('srpadmin.list') }}/" + btn.target.name + "/" + $(btn.target).text(),
                     dataType: 'json',
                     timeout: 5000
                 }).done(function (data) {
