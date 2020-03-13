@@ -34,5 +34,7 @@ return [
     'rigs'              =>  'Rigs',
     'drone_bay'         =>  'Drone Bay',
     'cargo_bay'         =>  'Cargo Bay',
-    'number'            =>  'Number'
+    'number'            =>  'Number',
+
+    'name_mismatch' => 'You cannot upload killmail that are not yours.',
 ];
