@@ -6,7 +6,8 @@ use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
 use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
-use Seat\Services\Models\Note;
+use Illuminate\Support\Facades\App;
+use Seat\Services\Settings\Profile;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Eveapi\Models\Character\CharacterInfo;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
@@ -18,6 +19,7 @@ class SrpController extends Controller {
 
     public function srpGetRequests()
     {
+        App::setLocale(Profile::get('language'));
         $kills = KillMail::where('user_id', auth()->user()->id)
                          ->orderby('created_at', 'desc')
                          ->take(20)
