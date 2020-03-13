@@ -32,6 +32,7 @@
                 <input type="hidden" class="form-control" id="srpCost" name="srpCost" value=""/>
                 <input type="hidden" class="form-control" id="srpKillId" name="srpKillId" value=""/>
                 <input type="hidden" class="form-control" id="srpKillToken" name="srpKillToken" value=""/>
+                <input type="hidden" class="form-control" id="srpKillTime" name="srpKillTime" value=""/>
                 {{ csrf_field() }}
             </div>
         </form>
@@ -356,7 +357,8 @@
                     $('#srpCharacterName').val(result["characterName"]);
                     $('#srpCost').val(result["price"]);
                     $('#srpShipType').val(result["shipType"]);
-                    $('#srpTypeId').val(result["typeId"])
+                    $('#srpTypeId').val(result["typeId"]);
+                    $('#srpKillTime').val(result["killTime"]);
                 }
                 else {
                     $('.overlay').hide();

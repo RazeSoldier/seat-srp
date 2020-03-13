@@ -2,13 +2,11 @@
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
-use Illuminate\Http\Request;
 use DB;
 use Illuminate\Support\Facades\App;
 use Seat\Services\Settings\Profile;
 use Seat\Web\Http\Controllers\Controller;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
-use Denngarr\Seat\SeatSrp\Validation\AddKillMail;
 
 
 class SrpAdminController extends Controller {
