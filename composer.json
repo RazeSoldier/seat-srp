@@ -1,5 +1,5 @@
 {
-    "name": "denngarr/seat-srp",
+    "name": "razesoldier/seat-srp",
     "description": "A module for SeAT that tracks SRP requests",
     "type": "seat-plugin",
     "license": "GPL-2.0",
@@ -7,6 +7,10 @@
         {
             "name": "Denngarr B'tarn",
             "email": "ed.stafford@gmail.com"
+        },
+        {
+            "name": "RazeSoldier",
+            "email": "razesoldier@outlook.com"
         }
     ],
     "minimum-stability": "stable",
