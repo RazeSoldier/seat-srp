@@ -44,6 +44,7 @@ class SrpController extends Controller {
 
     public function srpSaveKillMail(AddKillMail $request)
     {
+        App::setLocale(Profile::get('language'));
         if (auth()->user()->name !== $request->input('srpCharacterName')) {
             return redirect()->back()
                 ->with('error', trans('srp::srp.name_mismatch'));
