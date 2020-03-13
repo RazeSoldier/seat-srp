@@ -42,7 +42,10 @@ class SrpController extends Controller {
 
     public function srpSaveKillMail(AddKillMail $request)
     {
-
+        if (auth()->user()->name !== $request->input('srpCharacterName')) {
+            return redirect()->back()
+                ->with('error', trans('srp::srp.name_mismatch'));
+        }
         KillMail::create([
             'user_id'        => auth()->user()->id,
             'character_name' => $request->input('srpCharacterName'),
