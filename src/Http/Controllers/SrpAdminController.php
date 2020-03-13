@@ -2,18 +2,18 @@
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
-use Illuminate\Http\Request;
 use DB;
-use GuzzleHttp\Client;
+use Illuminate\Support\Facades\App;
+use Seat\Services\Settings\Profile;
 use Seat\Web\Http\Controllers\Controller;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
-use Denngarr\Seat\SeatSrp\Validation\AddKillMail;
 
 
 class SrpAdminController extends Controller {
 
     public function srpGetKillMails()
     {
+        App::setLocale(Profile::get('language'));
         $killmails = KillMail::where('approved','>','-2')->orderby('created_at', 'desc')->get();
 
         return view('srp::list', compact('killmails'));

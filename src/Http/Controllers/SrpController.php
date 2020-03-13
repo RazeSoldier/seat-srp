@@ -7,6 +7,7 @@ use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Illuminate\Support\Facades\App;
+use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Services\Settings\Profile;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Eveapi\Models\Character\CharacterInfo;
@@ -38,25 +39,33 @@ class SrpController extends Controller {
         $totalKill = array_merge($totalKill, $this->srpPopulateSlots($killMail));
         preg_match('/([a-z0-9]{35,42})/', $request->km, $tokens);
         $totalKill['killToken'] = $tokens[0];
+        $totalKill['killTime'] = \DateTime::createFromFormat('Y-m-d\TH:i:s\Z', $killMail->killmail_time)
+            ->format('Y-m-d H:i:s');
 
         return response()->json($totalKill);
     }
 
     public function srpSaveKillMail(AddKillMail $request)
     {
+        App::setLocale(Profile::get('language'));
         if (auth()->user()->name !== $request->input('srpCharacterName')) {
             return redirect()->back()
                 ->with('error', trans('srp::srp.name_mismatch'));
         }
+        $corpId = CharacterInfo::where('character_id', auth()->user()->id)->first()->corporation_id;
         KillMail::create([
             'user_id'        => auth()->user()->id,
+            'user_name'      => auth()->user()->name,
             'character_name' => $request->input('srpCharacterName'),
             'kill_id'        => $request->input('srpKillId'),
             'kill_token'     => $request->input('srpKillToken'),
             'approved'       => 0,
             'cost'           => $request->input('srpCost'),
             'type_id'        => $request->input('srpTypeId'),
-            'ship_type'      => $request->input('srpShipType')
+            'ship_type'      => $request->input('srpShipType'),
+            'corp_id'        => $corpId,
+            'corp_name'        => CorporationInfo::find($corpId)->name,
+            'kill_time'        => $request->input('srpKillTime'),
         ]);
 
         if (!is_null($request->input('srpPingContent')) && $request->input('srpPingContent') != '')

@@ -27,7 +27,8 @@ class KillMail extends Model {
     protected $table = 'seat_srp_srp';
 
     protected $fillable = [
-            'user_id', 'kill_id', 'character_name', 'kill_token', 'approved', 'cost', 'type_id', 'ship_type', 'approver'
+            'user_id', 'kill_id', 'character_name', 'kill_token', 'approved', 'cost', 'type_id', 'ship_type', 'approver',
+            'corp_id', 'corp_name', 'kill_time', 'user_name'
     ];
 
     protected static function boot()

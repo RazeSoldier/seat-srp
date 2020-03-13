@@ -21,9 +21,12 @@
             <thead>
                 <tr>
                   <th>{{ trans('srp::srp.id') }}</th>
+                  <th>{{ trans('srp::srp.userName') }}</th>
                   <th>{{ trans('srp::srp.characterName') }}</th>
+                  <th>{{ trans('srp::srp.corpName') }}</th>
                   <th>{{ trans('srp::srp.shipType') }}</th>
                   <th>{{ trans('srp::srp.costs') }}</th>
+                  <th>{{ trans('srp::srp.killTime') }}</th>
                   <th>{{ trans('srp::srp.paidout') }}</th>
                   <th>{{ trans('srp::srp.submitted') }}</th>
                   <th>{{ trans('srp::srp.action') }}</th>
@@ -42,13 +45,16 @@
                       </button>
                       @endif
                   </td>
+                  <td><span rel='id-to-name'>{{ $kill->user_name }}</span></td>
                   <td><span rel='id-to-name'>{{ $kill->character_name }}</span></td>
+                  <td><span rel='id-to-name'>{{ $kill->corp_name }}</span></td>
                   <td>{{ $kill->ship_type }}</td>
                   <td>
                       <button type="button" class="btn btn-xs btn-link" data-toggle="modal" data-target="#insurances" data-kill-id="{{ $kill->kill_id }}">
                           {{ number_format($kill->cost, 2) }} ISK
                       </button>
                   </td>
+                  <td><span>{{ $kill->kill_time }}</span></td>
                   @if ($kill->approved === 0)
                     <td id="id-{{ $kill->kill_id }}"><span class="label label-warning">Pending</span></td>
                   @elseif ($kill->approved === -1)
