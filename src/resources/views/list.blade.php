@@ -20,8 +20,6 @@
           <table id="srps" class="table table-bordered">
             <thead>
                 <tr>
-                  <th>{{ trans('srp::srp.id') }}</th>
-                  <th>{{ trans('srp::srp.userName') }}</th>
                   <th>{{ trans('srp::srp.characterName') }}</th>
                   <th>{{ trans('srp::srp.corpName') }}</th>
                   <th>{{ trans('srp::srp.shipType') }}</th>
@@ -38,15 +36,13 @@
                 @if(($kill->approved === 0) || ($kill->approved === 1))
                 <tr>
                   <td>
-                      <a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/" target="_blank">{{ $kill->kill_id }}</a>
+                      <a href="https://zkillboard.com/kill/{{ $kill->kill_id }}/" target="_blank">{{ $kill->character_name }}</a>
                       @if(!is_null($kill->ping()))
                       <button class="btn btn-xs btn-link" data-toggle="modal" data-target="#srp-ping" data-kill-id="{{ $kill->kill_id }}">
                           <i class="fa fa-comment"></i>
                       </button>
                       @endif
                   </td>
-                  <td><span rel='id-to-name'>{{ $kill->user_name }}</span></td>
-                  <td><span rel='id-to-name'>{{ $kill->character_name }}</span></td>
                   <td><span rel='id-to-name'>{{ $kill->corp_name }}</span></td>
                   <td>{{ $kill->ship_type }}</td>
                   <td>
