@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'label-srp' => 'Ship Replacement Program',
+    'label-request' => 'Request',
     'shipType' => 'Ship Type',
     'costs' => 'Ship Cost',
     'paidout' => 'Paid Out',

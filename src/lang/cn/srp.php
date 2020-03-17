@@ -1,6 +1,8 @@
 <?php
 
 return [
+    'label-srp' => '舰船补损',
+    'label-request' => '请求',
     'shipType' => '船型',
     'costs' => '花费',
     'paidout' => '已打款',
