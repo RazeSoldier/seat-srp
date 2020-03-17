@@ -42,4 +42,5 @@ return [
     'number'            =>  '数量',
 
     'name_mismatch' => '你不能上传不是你的KM。',
+    'new-request' => '新的SRP请求',
 ];

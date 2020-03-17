@@ -6,7 +6,7 @@
 @section('left')
     <div class="box box-success box-solid">
         <div class="box-header">
-            <h3 class="box-title">Request New SRP</h3>
+            <h3 class="box-title">{{__('srp::srp.new-request')}}</h3>
         </div>
         <form role="form" action="{{ route('srp.saveKillMail') }}" method="post">
             <div class="box-body">

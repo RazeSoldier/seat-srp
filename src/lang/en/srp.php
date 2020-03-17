@@ -42,4 +42,5 @@ return [
     'number'            =>  'Number',
 
     'name_mismatch' => 'You cannot upload killmail that are not yours.',
+    'new-request' => 'Request New SRP',
 ];
