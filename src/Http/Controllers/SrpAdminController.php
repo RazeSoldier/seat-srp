@@ -13,7 +13,6 @@ class SrpAdminController extends Controller {
 
     public function srpGetKillMails()
     {
-        App::setLocale(Profile::get('language'));
         $killmails = KillMail::where('approved','>','-2')->orderby('created_at', 'desc')->get();
 
         return view('srp::list', compact('killmails'));

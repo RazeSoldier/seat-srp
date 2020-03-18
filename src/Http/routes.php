@@ -60,7 +60,7 @@ Route::group([
 ], function () {
 
     Route::group([
-        'middleware' => ['web', 'auth'],
+        'middleware' => ['web', 'auth', 'locale'],
     ], function () {
 
         Route::get('/', [

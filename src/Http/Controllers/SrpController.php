@@ -20,7 +20,6 @@ class SrpController extends Controller {
 
     public function srpGetRequests()
     {
-        App::setLocale(Profile::get('language'));
         $kills = KillMail::where('user_id', auth()->user()->id)
                          ->orderby('created_at', 'desc')
                          ->take(20)
@@ -47,7 +46,6 @@ class SrpController extends Controller {
 
     public function srpSaveKillMail(AddKillMail $request)
     {
-        App::setLocale(Profile::get('language'));
         if (auth()->user()->name !== $request->input('srpCharacterName')) {
             return redirect()->back()
                 ->with('error', trans('srp::srp.name_mismatch'));
