@@ -6,9 +6,8 @@ use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
 use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
-use Illuminate\Support\Facades\App;
+use Seat\Eseye\Eseye;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
-use Seat\Services\Settings\Profile;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Eveapi\Models\Character\CharacterInfo;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
@@ -171,11 +170,7 @@ class SrpController extends Controller {
         array_push($priceList, $searchedItem->typeName);
         $prices = $this->srpGetPrice($priceList);
 
-        $pilot = CharacterInfo::find($killMail->victim->character_id);
-
-        $slots['characterName'] = $killMail->victim->character_id;
-        if (!is_null($pilot))
-            $slots['characterName'] = $pilot->name;
+        $slots['characterName'] = $this->getCharacterName($killMail->victim->character_id);
 
         $slots['killId'] = $killMail->killmail_id;
         $slots['price'] = $prices->appraisal->totals->sell;
@@ -203,5 +198,42 @@ class SrpController extends Controller {
             ]);
 
         return json_decode($response->getBody()->getContents());
+    }
+
+    /**
+     * Try to get the character name from database or ESI.
+     *
+     * @param int $characterId A character ID
+     * @return string The character name
+     * @throws \Seat\Eseye\Exceptions\EsiScopeAccessDeniedException
+     * @throws \Seat\Eseye\Exceptions\InvalidAuthenticationException
+     * @throws \Seat\Eseye\Exceptions\InvalidContainerDataException
+     * @throws \Seat\Eseye\Exceptions\RequestFailedException
+     * @throws \Seat\Eseye\Exceptions\UriDataMissingException
+     */
+    private function getCharacterName(int $characterId) : string
+    {
+        $info = CharacterInfo::find($characterId);
+        if ($info !== null) {
+            return $info->name;
+        }
+        /** @var Eseye $client */
+        $client = app('esi-client')->get();
+        $resp = $client->setVersion('v4')->invoke('get', "/characters/$characterId/");
+
+        CharacterInfo::firstOrNew(['character_id' => $characterId])->fill([
+            'name'            => $resp->name,
+            'description'     => $resp->optional('description'),
+            'corporation_id'  => $resp->corporation_id,
+            'alliance_id'     => $resp->optional('alliance_id'),
+            'birthday'        => $resp->birthday,
+            'gender'          => $resp->gender,
+            'race_id'         => $resp->race_id,
+            'bloodline_id'    => $resp->bloodline_id,
+            'ancestry_id'    => $resp->optional('ancestry_id'),
+            'security_status' => $resp->optional('security_status'),
+            'faction_id'      => $resp->optional('faction_id'),
+        ])->save();
+        return $resp->name;
     }
 }
