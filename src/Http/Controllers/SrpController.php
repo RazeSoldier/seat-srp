@@ -4,10 +4,12 @@ namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
 use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
 use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
+use Denngarr\Seat\SeatSrp\Util;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
 use Seat\Eseye\Eseye;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
+use Seat\Services\Settings\Profile;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Eveapi\Models\Character\CharacterInfo;
 use Denngarr\Seat\SeatSrp\Models\KillMail;
@@ -23,7 +25,15 @@ class SrpController extends Controller {
                          ->orderby('created_at', 'desc')
                          ->take(20)
                          ->get();
-
+        $lang = Profile::get('language');
+        if ($lang === 'cn') {
+            $lang = 'zh';
+        } else {
+            $lang = 'en';
+        }
+        foreach ($kills as $kill) {
+            $kill->ship_type = Util::translateShipType($kill->ship_type, $lang);
+        }
         return view('srp::request', compact('kills'));
     }
 
