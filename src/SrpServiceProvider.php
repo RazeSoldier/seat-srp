@@ -3,9 +3,9 @@
 namespace Denngarr\Seat\SeatSrp;
 
 use Denngarr\Seat\SeatSrp\Commands\InsuranceUpdate;
-use Illuminate\Support\ServiceProvider;
+use Seat\Services\AbstractSeatPlugin;
 
-class SrpServiceProvider extends ServiceProvider
+class SrpServiceProvider extends AbstractSeatPlugin
 {
     /**
      * Bootstrap the application services.
@@ -101,5 +101,42 @@ class SrpServiceProvider extends ServiceProvider
                 __DIR__ . '/Http/Controllers',
             ])),
         ]);
+    }
+
+    public function getName(): string
+    {
+        return 'SRP';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPackageRepositoryUrl(): string
+    {
+        return 'https://github.com/RazeSoldier/seat-srp';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPackagistPackageName(): string
+    {
+        return 'seat-srp';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getPackagistVendorName(): string
+    {
+        return 'razesoldier';
+    }
+
+    /**
+     * @inheritDoc
+     */
+    public function getVersion(): string
+    {
+        return '4.0.4';
     }
 }
