@@ -3,6 +3,7 @@
 return [
     'label-srp' => '舰船补损',
     'label-request' => '请求',
+    'label-review' => '审核',
     'shipType' => '船型',
     'costs' => '花费',
     'paidout' => '已打款',
@@ -20,7 +21,7 @@ return [
     'action' => '状态',
     'metrics' => '统计',
 
-    'request_inst'      =>  '打开人物链接Character Sheet -> 交互 Interactions -> 战斗记录 Combat Log -> 击毁报告 Losses -> 外部链接 External URL。 黏贴到这个框里。',
+    'request_inst'      =>  '打开人物链接 -> 交互 -> 战斗记录 -> 击毁报告 -> 复制外部击毁链接。粘贴到这个框里。',
     'request_new'       =>  '申请补损',
     'ping_info'         =>  '把集结信息写在这里。',
     'ping'              =>  '集结信息',
@@ -30,7 +31,7 @@ return [
     'killmail_details'  =>  '击毁报告详情',
     'pilot'             =>  '驾驶员',
     'ship'              =>  '船',
-    'cost'              =>  '花费',
+    'cost'              =>  '价值',
 
     'low_slot_mod'      =>  '低槽',
     'mid_slot_mod'      =>  '中槽',
@@ -43,4 +44,15 @@ return [
 
     'name_mismatch' => '你不能上传不是你的KM。',
     'new-request' => '新的SRP申请',
+    'kill-url' => '外部击毁链接',
+    'error' => '出现错误，请稍后重新提交。如果错误重现，请联系管理员。',
+    'srp-request' => '补损申请',
+    'pending-request' => '待处理的请求',
+    'completed-request' => '已完成的请求',
+    'pending' => '处理中',
+    'rejected' => '拒绝',
+    'approved' => '通过',
+    'paid-out' => '已补损',
+    'set-status' => '设置状态',
+    'request-create-time' => '创建时间',
 ];

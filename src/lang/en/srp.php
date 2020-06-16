@@ -3,6 +3,7 @@
 return [
     'label-srp' => 'Ship Replacement Program',
     'label-request' => 'Request',
+    'label-review' => 'Review',
     'shipType' => 'Ship Type',
     'costs' => 'Ship Cost',
     'paidout' => 'Paid Out',
@@ -43,4 +44,15 @@ return [
 
     'name_mismatch' => 'You cannot upload killmail that are not yours.',
     'new-request' => 'Request New SRP',
+    'kill-url' => 'External Url',
+    'error' => 'An error occurred, please resubmit later. If the error persists, please contact the admin.',
+    'srp-request' => 'SRP Requests',
+    'pending-request' => 'Pending Requests',
+    'completed-request' => 'Completed Requests',
+    'pending' => 'Pending',
+    'rejected' => 'Rejected',
+    'approved' => 'Approved',
+    'paid-out' => 'Paid Out',
+    'set-status' => 'Set Status',
+    'request-create-time' => 'Creation Time',
 ];

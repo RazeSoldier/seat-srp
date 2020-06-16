@@ -12,9 +12,9 @@
             <div class="box-body">
                 <p>{{ trans('srp::srp.request_inst') }}</p>
                 <div class="form-group">
-                    <label for="killMailUrl" class="control-label">External Url</label>
+                    <label for="killMailUrl" class="control-label">{{__('srp::srp.kill-url')}}</label>
                     <input type="text" class="form-control" id="killMailUrl" name="killMailUrl" placeholder="https://esi.tech.ccp.is/v1/killmails/9999999/sidufhus6f4654fdsdf4/?datasource=tranquility" />
-                    <span class="help-block" style="display: none;">Invalid killmail address</span>
+                    <span class="help-block" style="display: none;">{{__('srp::srp.error')}}</span>
                 </div>
                 <div class="form-group">
                     <label for="srpPingContent">{{ trans('srp::srp.ping') }}</label>
@@ -77,13 +77,13 @@
                         </td>
                         <td>
                             @if ($kill->approved === 0)
-                                <span class="label label-warning">Pending</span>
+                                <span class="label label-warning">{{__('srp::srp.pending')}}</span>
                             @elseif ($kill->approved === -1)
-                                <span class="label label-danger">Rejected</span>
+                                <span class="label label-danger">{{__('srp::srp.rejected')}}<</span>
                             @elseif ($kill->approved === 1)
-                                <span class="label label-success">Approved</span>
+                                <span class="label label-success">{{__('srp::srp.approved')}}</span>
                             @elseif ($kill->approved === 2)
-                                <span class="label label-primary">Paid Out</span>
+                                <span class="label label-primary">{{__('srp::srp.paid-out')}}</span>
                             @endif
                         </td>
                         <td>
