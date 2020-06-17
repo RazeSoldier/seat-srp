@@ -51,9 +51,9 @@
                     <th>{{ trans('srp::srp.id') }}</th>
                     <th>{{ trans('srp::srp.characterName') }}</th>
                     <th>{{ trans('srp::srp.shipType') }}</th>
-                    <th>{{ trans('srp::srp.costs') }}</th>
-                    <th>{{ trans('srp::srp.paidout') }}</th>
-                    <th>{{ trans('srp::srp.submitted') }}</th>
+                    <th>{{ trans('srp::srp.cost') }}</th>
+                    <th>{{ trans('srp::srp.action') }}</th>
+                    <th>{{ trans('srp::srp.request-create-time') }}</th>
                     <th>{{ trans('srp::srp.approvedby') }}</th>
                 </tr>
                 </thead>
@@ -79,7 +79,7 @@
                             @if ($kill->approved === 0)
                                 <span class="label label-warning">{{__('srp::srp.pending')}}</span>
                             @elseif ($kill->approved === -1)
-                                <span class="label label-danger">{{__('srp::srp.rejected')}}<</span>
+                                <span class="label label-danger">{{__('srp::srp.rejected')}}</span>
                             @elseif ($kill->approved === 1)
                                 <span class="label label-success">{{__('srp::srp.approved')}}</span>
                             @elseif ($kill->approved === 2)
