@@ -30,10 +30,10 @@ class SrpAdminController extends Controller {
 
         switch ($action)
         {
-            case 'Approve':
+            case 'Approved':
                 $killmail->approved = '1';
                 break;
-            case 'Reject':
+            case 'Rejected':
                 $killmail->approved = '-1';
                 break;
             case 'Paid Out':

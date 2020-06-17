@@ -83,16 +83,16 @@
                                         <td>
                                             <button type="button" class="btn btn-xs btn-warning srp-status"
                                                     id="srp-status"
-                                                    name="{{ $kill->kill_id }}">{{__('srp::srp.pending')}}</button>
+                                                    name="{{ $kill->kill_id }}/{{__('srp::srp.pending', [], 'en')}}">{{__('srp::srp.pending')}}</button>
                                             <button type="button" class="btn btn-xs btn-danger srp-status"
                                                     id="srp-status"
-                                                    name="{{ $kill->kill_id }}">{{__('srp::srp.rejected')}}</button>
+                                                    name="{{ $kill->kill_id }}/{{__('srp::srp.rejected', [], 'en')}}">{{__('srp::srp.rejected')}}</button>
                                             <button type="button" class="btn btn-xs btn-success srp-status"
                                                     id="srp-status"
-                                                    name="{{ $kill->kill_id }}">{{__('srp::srp.approved')}}</button>
+                                                    name="{{ $kill->kill_id }}/{{__('srp::srp.approved', [], 'en')}}">{{__('srp::srp.approved')}}</button>
                                             <button type="button" class="btn btn-xs btn-primary srp-status"
                                                     id="srp-status"
-                                                    name="{{ $kill->kill_id }}">{{__('srp::srp.paid-out')}}</button>
+                                                    name="{{ $kill->kill_id }}/{{__('srp::srp.paid-out', [], 'en')}}">{{__('srp::srp.paid-out')}}</button>
                                         </td>
                                         <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
                                     </tr>
@@ -138,16 +138,16 @@
                                         </td>
                                         @if ($kill->approved === 0)
                                             <td id="id-{{ $kill->kill_id }}"><span
-                                                        class="label label-warning">Pending</span></td>
+                                                        class="label label-warning">{{__('srp::srp.pending')}}</span></td>
                                         @elseif ($kill->approved === -1)
                                             <td id="id-{{ $kill->kill_id }}"><span
-                                                        class="label label-danger">Rejected</span></td>
+                                                        class="label label-danger">{{__('srp::srp.rejected')}}</span></td>
                                         @elseif ($kill->approved === 1)
                                             <td id="id-{{ $kill->kill_id }}"><span
-                                                        class="label label-success">Approved</span></td>
+                                                        class="label label-success">{{__('srp::srp.approved')}}</span></td>
                                         @elseif ($kill->approved === 2)
                                             <td id="id-{{ $kill->kill_id }}"><span
-                                                        class="label label-primary">Paid Out</span></td>
+                                                        class="label label-primary">{{__('srp::srp.paid-out')}}</span></td>
                                         @endif
                                         <td data-order="{{ strtotime($kill->created_at) }}">
                                             <span data-toggle="tooltip" data-placement="top"
@@ -278,18 +278,18 @@
                 $.ajax({
                     headers: function () {
                     },
-                    url: "{{ route('srpadmin.list') }}/" + btn.target.name + "/" + $(btn.target).text(),
+                    url: "{{ route('srpadmin.list') }}/" + btn.target.name,
                     dataType: 'json',
                     timeout: 5000
                 }).done(function (data) {
-                    if (data.name === "Approve") {
-                        $("#id-" + data.value).html('<span class="label label-success">Approved</span>');
-                    } else if (data.name === "Reject") {
-                        $("#id-" + data.value).html('<span class="label label-danger">Rejected</span>');
+                    if (data.name === "Approved") {
+                        $("#id-" + data.value).html('<span class="label label-success">{{__('srp::srp.approved')}}</span>');
+                    } else if (data.name === "Rejected") {
+                        $("#id-" + data.value).html('<span class="label label-danger">{{__('srp::srp.pending')}}</span>');
                     } else if (data.name === "Paid Out") {
-                        $("#id-" + data.value).html('<span class="label label-primary">Paid Out</span>');
+                        $("#id-" + data.value).html('<span class="label label-primary">{{__('srp::srp.paid-out')}}</span>');
                     } else if (data.name === "Pending") {
-                        $("#id-" + data.value).html('<span class="label label-warning">Pending</span>');
+                        $("#id-" + data.value).html('<span class="label label-warning">{{__('srp::srp.pending')}}</span>');
                     }
                     $("#approver-" + data.value).html(data.approver);
                 });
