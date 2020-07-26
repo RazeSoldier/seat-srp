@@ -229,7 +229,9 @@ class SrpController extends Controller {
     private static function saveAsExecl(array $data) : string
     {
         $spreadsheet = new Spreadsheet();
+        # Sheet 1 @{
         $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('按角色');
         // Set headers
         $sheet->setCellValue('A1', 'corp');
         $sheet->setCellValue('B1', 'character_name');
@@ -242,6 +244,25 @@ class SrpController extends Controller {
             $sheet->setCellValue("B$i", $name);
             $sheet->setCellValue("C$i", $value['cost']);
         }
+        # @}
+        # Sheet 2 @{
+        $sheet = $spreadsheet->createSheet();
+        $sheet->setTitle('按军团');
+
+        $corpPaidCost = [];
+        foreach ($data as $value) {
+            if (!isset($corpPaidCost[$value['corpName']])) {
+                $corpPaidCost[$value['corpName']] = 0;
+            }
+            $corpPaidCost[$value['corpName']] += $value['cost'];
+        }
+        $i = 0;
+        foreach ($corpPaidCost as $corpName => $cost) {
+            $i++;
+            $sheet->setCellValue("A$i", $corpName);
+            $sheet->setCellValue("B$i", $cost);
+        }
+        # @}
         $writer = new Xls($spreadsheet);
         $tempFilePath = tempnam(sys_get_temp_dir(), 'seat-srp');
         $writer->save($tempFilePath);
