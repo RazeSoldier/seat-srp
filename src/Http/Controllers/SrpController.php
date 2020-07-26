@@ -2,20 +2,29 @@
 
 namespace Denngarr\Seat\SeatSrp\Http\Controllers;
 
-use Denngarr\Seat\SeatSrp\Models\Sde\InvFlag;
-use Denngarr\Seat\SeatSrp\Models\Sde\InvType;
+use Denngarr\Seat\SeatSrp\Http\Resources\ActionLog;
+use Denngarr\Seat\SeatSrp\Models\{
+    Sde\InvFlag,
+    Sde\InvType,
+    ShipCost,
+    SrpActionLog
+};
+use Denngarr\Seat\SeatSrp\Models\KillMail;
+use Denngarr\Seat\SeatSrp\Validation\AddKillMail;
 use Denngarr\Seat\SeatSrp\Util;
 use Illuminate\Http\Request;
 use GuzzleHttp\Client;
+use Illuminate\Validation\ValidationException;
+use PhpOffice\PhpSpreadsheet\{
+    Spreadsheet,
+    Writer\Xls
+};
 use Seat\Eseye\Eseye;
 use Seat\Eveapi\Models\Corporation\CorporationInfo;
 use Seat\Services\Settings\Profile;
 use Seat\Web\Http\Controllers\Controller;
 use Seat\Eveapi\Models\Character\CharacterInfo;
-use Denngarr\Seat\SeatSrp\Models\KillMail;
-use Denngarr\Seat\SeatSrp\Validation\AddKillMail;
 use stdClass;
-
 
 class SrpController extends Controller {
 
@@ -118,6 +127,126 @@ class SrpController extends Controller {
 
 		return response()->json(['msg' => sprintf('There are no ping information related to kill %s', $kill_id)], 204);
 	}
+
+    /**
+     * Route: GET /srp/export
+     */
+	public function showExportPage()
+    {
+        return view('srp::export');
+    }
+
+    /**
+     * Route: GET /srp/export-execl?startDate={startDate}&endDate={$endDate}
+     */
+    public function exportExecl(Request $request)
+    {
+        try {
+            $this->validate($request, [
+                'startDate' => 'required',
+                'endDate' => 'required',
+            ]);
+        } catch (ValidationException $e) {
+            return response()->json([
+                'status' => 'error',
+                'error' => $e->errors(),
+            ])->setStatusCode(422);
+        }
+        $mails = KillMail::where([
+            ['created_at', '>', $request->startDate],
+            ['created_at', '<', $request->endDate],
+        ])->whereIn('approved', [1, 2])->get();
+        $data = [];
+        /** @var KillMail $mail */
+        foreach ($mails as $mail) {
+            // If there is a ship type that does not meet the regulations,
+            // an error message will be returned immediately.
+            if (!self::validateShipType($mail->ship_type)) {
+                return response()->json([
+                    'status' => 'error',
+                    'error' => "{$mail->ship_type} is not a valid ship type",
+                ])->setStatusCode(200);
+            }
+            if (!isset($data[$mail->character_name])) {
+                $data[$mail->character_name] = [
+                    'corpName' => $mail->corp_name,
+                    'cost' => 0,
+                ];
+            }
+            $data[$mail->character_name]['cost'] += ShipCost::where('ship', $mail->ship_type)->first()->cost;
+        }
+
+        // Logging the export action
+        SrpActionLog::logExportAction(auth()->user(), new \DateTime($request->startDate), new \DateTime($request->endDate));
+
+        $path = self::saveAsExecl($data);
+        return response()->json([
+            'status' => 'ok',
+            'url' => str_replace(sys_get_temp_dir() . '/', null, $path),
+        ]);
+    }
+
+    /**
+     * Route: GET /srp/export-execl/download/{path}
+     */
+    public function downloadExecl(string $path)
+    {
+        return response()->download(sys_get_temp_dir() . "/$path", "$path.xls");
+    }
+
+    /**
+     * Route: GET /srp/mark-paid?startDate={startDate}&endDate={$endDate}
+     */
+    public function markPaid(Request $request)
+    {
+        KillMail::where([
+            ['created_at', '>', $request->startDate],
+            ['created_at', '<', $request->endDate],
+            ['approved', 1],
+        ])->update(['approved' => 2]);
+        SrpActionLog::logMarkPaidAction(auth()->user(), new \DateTime($request->startDate), new \DateTime($request->endDate));
+        return back()->with('markPaidDone', true);
+    }
+
+    /**
+     * Route: GET /srp/action-history
+     */
+    public function getActionHistory()
+    {
+        return ActionLog::collection(SrpActionLog::all());
+    }
+
+    /**
+     * Check whether the ship type of KM meets the requirements
+     * @param string $shipType
+     * @return bool
+     */
+    private static function validateShipType(string $shipType) : bool
+    {
+        return ShipCost::where('ship', $shipType)->first() !== null;
+    }
+
+    private static function saveAsExecl(array $data) : string
+    {
+        $spreadsheet = new Spreadsheet();
+        $sheet = $spreadsheet->getActiveSheet();
+        // Set headers
+        $sheet->setCellValue('A1', 'corp');
+        $sheet->setCellValue('B1', 'character_name');
+        $sheet->setCellValue('C1', 'cost');
+
+        $i = 1;
+        foreach ($data as $name => $value) {
+            $i++;
+            $sheet->setCellValue("A$i", $value['corpName']);
+            $sheet->setCellValue("B$i", $name);
+            $sheet->setCellValue("C$i", $value['cost']);
+        }
+        $writer = new Xls($spreadsheet);
+        $tempFilePath = tempnam(sys_get_temp_dir(), 'seat-srp');
+        $writer->save($tempFilePath);
+        return $tempFilePath;
+    }
 
     private function srpPopulateSlots(stdClass $killMail) : array
     {

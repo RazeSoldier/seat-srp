@@ -105,6 +105,36 @@ Route::group([
 	        'middleware' => 'bouncer:srp.request',
         ]);
 
+        Route::get('/export', [
+            'as' => 'srp.export-page',
+            'uses' => 'SrpController@showExportPage',
+            'middleware' => 'bouncer:srp.settle',
+        ]);
+
+        Route::get('/export-execl', [
+            'as' => 'srp.export-execl',
+            'uses' => 'SrpController@exportExecl',
+            'middleware' => 'bouncer:srp.settle',
+        ]);
+
+        Route::get('/export-execl/download/{path?}', [
+            'as' => 'srp.export-execl-download',
+            'uses' => 'SrpController@downloadExecl',
+            'middleware' => 'bouncer:srp.settle',
+        ]);
+
+        Route::get('/mark-paid', [
+            'as' => 'srp.mark-paid',
+            'uses' => 'SrpController@markPaid',
+            'middleware' => 'bouncer:srp.settle',
+        ]);
+
+        Route::get('/action-history', [
+            'as' => 'srp.action-history',
+            'uses' => 'SrpController@getActionHistory',
+            'middleware' => 'bouncer:srp.settle',
+        ]);
+
         Route::group([
             'middleware' => 'bouncer:srp.settle',
             'prefix' => 'metrics'

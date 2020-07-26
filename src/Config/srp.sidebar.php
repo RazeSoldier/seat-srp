@@ -29,6 +29,13 @@ return [
                 'route' => 'srp.metrics',
                 'permission' => 'srp.settle',
             ],
+            [
+                'name' => 'Export',
+                'label' => '导出数据',
+                'icon' => 'fa-bar-chart',
+                'route' => 'srp.export-page',
+                'permission' => 'srp.settle',
+            ],
 		],
 	],
 ];
