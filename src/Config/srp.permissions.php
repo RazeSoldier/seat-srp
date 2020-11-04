@@ -8,7 +8,8 @@
 return [
     'srp' => [
         'request',
-        'settle'
+        'settle',
+	    'admin-readonly',
     ]
 ];
 

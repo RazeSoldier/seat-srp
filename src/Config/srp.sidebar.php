@@ -20,7 +20,7 @@ return [
                 'label' => 'srp::srp.label-review',
 				'icon' => 'fa-gavel',
 				'route' => 'srpadmin.list',
-				'permission' => 'srp.settle',
+				'permission' => 'srp.admin-readonly',
 			],
             [
                 'name' => 'Metrics',

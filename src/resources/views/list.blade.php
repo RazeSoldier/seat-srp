@@ -28,7 +28,9 @@
                                 <th>{{ trans('srp::srp.action') }}</th>
                                 <th>{{ trans('srp::srp.request-create-time') }}</th>
                                 <th>{{ trans('srp::srp.changedby') }}</th>
-                                <th>{{ trans('srp::srp.set-status') }}</th>
+                                @if(auth()->user()->has('srp.settle'))
+                                    <th>{{ trans('srp::srp.set-status') }}</th>
+                                @endif
                                 <th>{{ trans('srp::srp.approvedby') }}</th>
                             </tr>
                             </thead>
@@ -80,20 +82,22 @@
                                             <span data-toggle="tooltip" data-placement="top"
                                                   title="{{ $kill->updated_at }}">{{ human_diff($kill->updated_at) }}</span>
                                         </td>
-                                        <td>
-                                            <button type="button" class="btn btn-xs btn-warning srp-status"
-                                                    id="srp-status"
-                                                    name="{{ $kill->kill_id }}/{{__('srp::srp.pending', [], 'en')}}">{{__('srp::srp.pending')}}</button>
-                                            <button type="button" class="btn btn-xs btn-danger srp-status"
-                                                    id="srp-status"
-                                                    name="{{ $kill->kill_id }}/{{__('srp::srp.rejected', [], 'en')}}">{{__('srp::srp.rejected')}}</button>
-                                            <button type="button" class="btn btn-xs btn-success srp-status"
-                                                    id="srp-status"
-                                                    name="{{ $kill->kill_id }}/{{__('srp::srp.approved', [], 'en')}}">{{__('srp::srp.approved')}}</button>
-                                            <button type="button" class="btn btn-xs btn-primary srp-status"
-                                                    id="srp-status"
-                                                    name="{{ $kill->kill_id }}/{{__('srp::srp.paid-out', [], 'en')}}">{{__('srp::srp.paid-out')}}</button>
-                                        </td>
+                                        @if(auth()->user()->has('srp.settle'))
+                                            <td>
+                                                <button type="button" class="btn btn-xs btn-warning srp-status"
+                                                        id="srp-status"
+                                                        name="{{ $kill->kill_id }}/{{__('srp::srp.pending', [], 'en')}}">{{__('srp::srp.pending')}}</button>
+                                                <button type="button" class="btn btn-xs btn-danger srp-status"
+                                                        id="srp-status"
+                                                        name="{{ $kill->kill_id }}/{{__('srp::srp.rejected', [], 'en')}}">{{__('srp::srp.rejected')}}</button>
+                                                <button type="button" class="btn btn-xs btn-success srp-status"
+                                                        id="srp-status"
+                                                        name="{{ $kill->kill_id }}/{{__('srp::srp.approved', [], 'en')}}">{{__('srp::srp.approved')}}</button>
+                                                <button type="button" class="btn btn-xs btn-primary srp-status"
+                                                        id="srp-status"
+                                                        name="{{ $kill->kill_id }}/{{__('srp::srp.paid-out', [], 'en')}}">{{__('srp::srp.paid-out')}}</button>
+                                            </td>
+                                        @endif
                                         <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
                                     </tr>
                                 @endif

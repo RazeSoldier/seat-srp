@@ -84,7 +84,7 @@ Route::group([
         Route::get('/admin', [
             'as'   => 'srpadmin.list',
             'uses' => 'SrpAdminController@srpGetKillMails',
-            'middleware' => 'bouncer:srp.settle'
+            'middleware' => 'bouncer:srp.admin-readonly'
         ]);
 
         Route::get('/admin/{kill_id}/{action}', [
