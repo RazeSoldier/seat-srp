@@ -28,7 +28,7 @@
                                 <th>{{ trans('srp::srp.action') }}</th>
                                 <th>{{ trans('srp::srp.request-create-time') }}</th>
                                 <th>{{ trans('srp::srp.changedby') }}</th>
-                                @if(auth()->user()->has('srp.settle'))
+                                @if(auth()->user()->has('srp.settle', false))
                                     <th>{{ trans('srp::srp.set-status') }}</th>
                                 @endif
                                 <th>{{ trans('srp::srp.approvedby') }}</th>
@@ -82,7 +82,7 @@
                                             <span data-toggle="tooltip" data-placement="top"
                                                   title="{{ $kill->updated_at }}">{{ human_diff($kill->updated_at) }}</span>
                                         </td>
-                                        @if(auth()->user()->has('srp.settle'))
+                                        @if(auth()->user()->has('srp.settle', false))
                                             <td>
                                                 <button type="button" class="btn btn-xs btn-warning srp-status"
                                                         id="srp-status"
