@@ -5,5 +5,5 @@
  */
 
 return [
-    'version'   => '4.1.3'
+    'version'   => '4.1.4'
 ];
