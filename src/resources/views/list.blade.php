@@ -28,9 +28,10 @@
                                 <th>{{ trans('srp::srp.action') }}</th>
                                 <th>{{ trans('srp::srp.request-create-time') }}</th>
                                 <th>{{ trans('srp::srp.changedby') }}</th>
-                                @if(auth()->user()->has('srp.settle', false))
+
+                                @can('srp.settle')
                                     <th>{{ trans('srp::srp.set-status') }}</th>
-                                @endif
+                                @endcan
                                 <th>{{ trans('srp::srp.approvedby') }}</th>
                             </tr>
                             </thead>
@@ -82,7 +83,7 @@
                                             <span data-toggle="tooltip" data-placement="top"
                                                   title="{{ $kill->updated_at }}">{{ human_diff($kill->updated_at) }}</span>
                                         </td>
-                                        @if(auth()->user()->has('srp.settle', false))
+                                        @can('srp.settle')
                                             <td>
                                                 <button type="button" class="btn btn-xs btn-warning srp-status"
                                                         id="srp-status"
@@ -97,7 +98,7 @@
                                                         id="srp-status"
                                                         name="{{ $kill->kill_id }}/{{__('srp::srp.paid-out', [], 'en')}}">{{__('srp::srp.paid-out')}}</button>
                                             </td>
-                                        @endif
+                                        @endcan
                                         <td id="approver-{{ $kill->kill_id }}">{{ $kill->approver }}</td>
                                     </tr>
                                 @endif
@@ -282,14 +283,14 @@
                 $.ajax({
                     headers: function () {
                     },
-                    url: "{{ route('srpadmin.list') }}/" + btn.target.name + "/" + $(btn.target).text(),
+                    url: "{{ route('srpadmin.list') }}/" + btn.target.name,
                     dataType: 'json',
                     timeout: 5000
                 }).done(function (data) {
                     if (data.name === "Approved") {
                         $("#id-" + data.value).html('<span class="label label-success">{{__('srp::srp.approved')}}</span>');
                     } else if (data.name === "Rejected") {
-                        $("#id-" + data.value).html('<span class="label label-danger">{{__('srp::srp.pending')}}</span>');
+                        $("#id-" + data.value).html('<span class="label label-danger">{{__('srp::srp.rejected')}}</span>');
                     } else if (data.name === "Paid Out") {
                         $("#id-" + data.value).html('<span class="label label-primary">{{__('srp::srp.paid-out')}}</span>');
                     } else if (data.name === "Pending") {

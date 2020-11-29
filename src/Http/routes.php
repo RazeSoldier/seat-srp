@@ -66,77 +66,77 @@ Route::group([
         Route::get('/', [
             'as'   => 'srp.request',
             'uses' => 'SrpController@srpGetRequests',
-            'middleware' => 'bouncer:srp.request'
+            'middleware' => 'can:srp.request'
         ]);
 
         Route::get('/getkillmail', [
             'as'   => 'srp.getKillMail',
             'uses' => 'SrpController@srpGetKillMail',
-            'middleware' => 'bouncer:srp.request'
+            'middleware' => 'can:srp.request'
         ]);
 
         Route::post('/savekillmail', [
             'as'   => 'srp.saveKillMail',
             'uses' => 'SrpController@srpSaveKillMail',
-            'middleware' => 'bouncer:srp.request'
+            'middleware' => 'can:srp.request'
         ]);
 
         Route::get('/admin', [
             'as'   => 'srpadmin.list',
             'uses' => 'SrpAdminController@srpGetKillMails',
-            'middleware' => 'bouncer:srp.admin-readonly'
+            'middleware' => 'can:srp.admin-readonly'
         ]);
 
         Route::get('/admin/{kill_id}/{action}', [
             'as'   => 'srpadmin.settle',
             'uses' => 'SrpAdminController@srpApprove',
-            'middleware' => 'bouncer:srp.settle'
+            'middleware' => 'can:srp.settle'
         ])->where(['action' => 'Approved|Rejected|Paid Out|Pending']);
 
         Route::get('/insurances/{kill_id}', [
             'as' => 'srp.insurances',
             'uses' => 'SrpController@getInsurances',
-            'middleware' => 'bouncer:srp.request',
+            'middleware' => 'can:srp.request',
         ]);
 
         Route::get('/ping/{kill_id}', [
         	'as' => 'srp.ping',
 	        'uses' => 'SrpController@getPing',
-	        'middleware' => 'bouncer:srp.request',
+	        'middleware' => 'can:srp.request',
         ]);
 
         Route::get('/export', [
             'as' => 'srp.export-page',
             'uses' => 'SrpController@showExportPage',
-            'middleware' => 'bouncer:srp.settle',
+            'middleware' => 'can:srp.settle',
         ]);
 
         Route::get('/export-execl', [
             'as' => 'srp.export-execl',
             'uses' => 'SrpController@exportExecl',
-            'middleware' => 'bouncer:srp.settle',
+            'middleware' => 'can:srp.settle',
         ]);
 
         Route::get('/export-execl/download/{path?}', [
             'as' => 'srp.export-execl-download',
             'uses' => 'SrpController@downloadExecl',
-            'middleware' => 'bouncer:srp.settle',
+            'middleware' => 'can:srp.settle',
         ]);
 
         Route::get('/mark-paid', [
             'as' => 'srp.mark-paid',
             'uses' => 'SrpController@markPaid',
-            'middleware' => 'bouncer:srp.settle',
+            'middleware' => 'can:srp.settle',
         ]);
 
         Route::get('/action-history', [
             'as' => 'srp.action-history',
             'uses' => 'SrpController@getActionHistory',
-            'middleware' => 'bouncer:srp.settle',
+            'middleware' => 'can:srp.settle',
         ]);
 
         Route::group([
-            'middleware' => 'bouncer:srp.settle',
+            'middleware' => 'can:srp.settle',
             'prefix' => 'metrics'
         ], function (){
 

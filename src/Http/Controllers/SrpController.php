@@ -68,7 +68,7 @@ class SrpController extends Controller {
             return redirect()->back()
                 ->with('error', trans('srp::srp.name_mismatch'));
         }
-        $corpId = CharacterInfo::where('character_id', auth()->user()->id)->first()->corporation_id;
+        $corpId = CharacterInfo::whereName($request->input('srpCharacterName'))->first()->affiliation->corporation_id;
         KillMail::create([
             'user_id'        => auth()->user()->id,
             'user_name'      => auth()->user()->name,
@@ -182,7 +182,7 @@ class SrpController extends Controller {
         $path = self::saveAsExecl($data);
         return response()->json([
             'status' => 'ok',
-            'url' => str_replace(sys_get_temp_dir() . '/', null, $path),
+            'url' => str_replace(realpath(sys_get_temp_dir()) . '/', null, $path),
         ]);
     }
 
@@ -381,19 +381,13 @@ class SrpController extends Controller {
         $client = app('esi-client')->get();
         $resp = $client->setVersion('v4')->invoke('get', "/characters/$characterId/");
 
-        CharacterInfo::firstOrNew(['character_id' => $characterId])->fill([
-            'name'            => $resp->name,
-            'description'     => $resp->optional('description'),
-            'corporation_id'  => $resp->corporation_id,
-            'alliance_id'     => $resp->optional('alliance_id'),
-            'birthday'        => $resp->birthday,
-            'gender'          => $resp->gender,
-            'race_id'         => $resp->race_id,
-            'bloodline_id'    => $resp->bloodline_id,
-            'ancestry_id'    => $resp->optional('ancestry_id'),
-            'security_status' => $resp->optional('security_status'),
-            'faction_id'      => $resp->optional('faction_id'),
-        ])->save();
+        CharacterInfo::firstOrCreate(['character_id' => $characterId], [
+	        'name'         => $resp->name,
+	        'birthday'     => $resp->birthday,
+	        'gender'       => $resp->gender,
+	        'race_id'      => $resp->race_id,
+	        'bloodline_id' => $resp->bloodline_id,
+        ]);
         return $resp->name;
     }
 }

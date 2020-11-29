@@ -6,10 +6,17 @@
  */
 
 return [
-    'srp' => [
-        'request',
-        'settle',
-	    'admin-readonly',
-    ]
+	'request' => [
+		'label' => 'Srp申请权',
+		'description' => '拥有此权限可以上传Srp申请',
+	],
+	'settle' => [
+		'label' => 'Srp审核权',
+		'description' => '拥有此权限审核Srp申请',
+	],
+	'admin-readonly' => [
+		'label' => 'Srp审核页只读',
+		'description' => '拥有此权限只能查看Srp申请，不能审核',
+	],
 ];
 
