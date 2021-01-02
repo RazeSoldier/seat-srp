@@ -137,6 +137,6 @@ class SrpServiceProvider extends AbstractSeatPlugin
      */
     public function getVersion(): string
     {
-        return '4.2.4';
+        return '4.2.5';
     }
 }

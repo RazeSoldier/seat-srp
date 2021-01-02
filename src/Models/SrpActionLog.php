@@ -4,7 +4,7 @@ namespace Denngarr\Seat\SeatSrp\Models;
 
 use DateTimeInterface;
 use Illuminate\Database\Eloquent\Model;
-use Seat\Web\Models\User;
+use Seat\Eveapi\Models\Character\CharacterInfo;
 
 /**
  * @property int operator_id
@@ -14,25 +14,25 @@ use Seat\Web\Models\User;
  */
 class SrpActionLog extends Model
 {
-    public function user()
+    public function character()
     {
-        return $this->belongsTo(User::class, 'operator_id');
+        return $this->belongsTo(CharacterInfo::class, 'operator_id', 'character_id');
     }
 
-    public static function logExportAction(User $user, DateTimeInterface $startDate, DateTimeInterface $endDate)
+    public static function logExportAction(CharacterInfo $character, DateTimeInterface $startDate, DateTimeInterface $endDate)
     {
         $log = new self;
-        $log->operator_id = $user->id;
+        $log->operator_id = $character->character_id;
         $log->action_type = 'export';
         $log->detail = '导出' . $startDate->format('Y-m-d') . ' - ' . $endDate->format('Y-m-d')
             . '期间所有的“已审核”和“已补损”的SRP请求';
         $log->save();
     }
 
-    public static function logMarkPaidAction(User $user, DateTimeInterface $startDate, DateTimeInterface $endDate)
+    public static function logMarkPaidAction(CharacterInfo $character, DateTimeInterface $startDate, DateTimeInterface $endDate)
     {
         $log = new self;
-        $log->operator_id = $user->id;
+        $log->operator_id = $character->character_id;
         $log->action_type = 'mark_paid';
         $log->detail = '批量标记' . $startDate->format('Y-m-d') . ' - ' . $endDate->format('Y-m-d')
             . '期间所有的“已审核”的SRP请求为“已补损”状态';

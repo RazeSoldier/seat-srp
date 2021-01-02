@@ -177,7 +177,7 @@ class SrpController extends Controller {
         }
 
         // Logging the export action
-        SrpActionLog::logExportAction(auth()->user(), new \DateTime($request->startDate), new \DateTime($request->endDate));
+        SrpActionLog::logExportAction(auth()->user()->main_character, new \DateTime($request->startDate), new \DateTime($request->endDate));
 
         $path = self::saveAsExecl($data);
         return response()->json([
@@ -204,7 +204,7 @@ class SrpController extends Controller {
             ['created_at', '<', $request->endDate],
             ['approved', 1],
         ])->update(['approved' => 2]);
-        SrpActionLog::logMarkPaidAction(auth()->user(), new \DateTime($request->startDate), new \DateTime($request->endDate));
+        SrpActionLog::logMarkPaidAction(auth()->user()->main_character, new \DateTime($request->startDate), new \DateTime($request->endDate));
         return back()->with('markPaidDone', true);
     }
 

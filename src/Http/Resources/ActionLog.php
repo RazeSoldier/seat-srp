@@ -18,7 +18,7 @@ class ActionLog extends Resource
     {
         return [
             'time' => (new \DateTime($this->created_at))->format('Y-m-d H:i:s'),
-            'operator' => $this->user->name,
+            'operator' => $this->character->name,
             'detail' => $this->detail,
         ];
     }
