@@ -14,7 +14,7 @@ class SrpAdminController extends Controller {
     {
         $killmails = KillMail::where('approved','>','-2')->orderby('created_at', 'desc')->get();
         $lang = Profile::get('language');
-        if ($lang === 'cn') {
+        if ($lang === 'zh-CN' || $lang === 'cn') {
             $lang = 'zh';
         } else {
             $lang = 'en';

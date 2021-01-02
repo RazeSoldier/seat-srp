@@ -35,7 +35,7 @@ class SrpController extends Controller {
                          ->take(20)
                          ->get();
         $lang = Profile::get('language');
-        if ($lang === 'cn') {
+        if ($lang === 'zh-CN' || $lang === 'cn') {
             $lang = 'zh';
         } else {
             $lang = 'en';
